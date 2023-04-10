@@ -1,7 +1,10 @@
 package com.cebondlovu.weather4;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -14,15 +17,36 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.cebondlovu.weather4.ui.NavigationController;
 import com.cebondlovu.weather4.util.SharedPreferences;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -33,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     private AppBarConfiguration mAppBarConfiguration;
     DrawerLayout drawer;
+    private ImageButton menuButton;
+    private ImageButton pinButton;
+
+    private int PLACE_PICKER_REQUEST = 12;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -50,7 +78,19 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this,R.color.transparent)));
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this,R.color.transparent)));
+
+        // Initialize the Places API
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), BuildConfig.PLACES_API_KEY);
+        }
+
+
+        menuButton = findViewById(R.id.menuButton);
+        menuButton.setOnClickListener(view -> drawer.open());
+
+        pinButton = findViewById(R.id.pinButton);
+        pinButton.setOnClickListener(this::openMap);
 
         drawer = findViewById(R.id.drawerLayout);
         NavigationView navigationView = findViewById(R.id.navView);
@@ -62,7 +102,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        if(getSupportActionBar() != null) {
+            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        }
         NavigationUI.setupWithNavController(navView, navController);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
@@ -83,6 +125,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
             }
         });
+    }
+
+    private void openMap(View view) {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .build(MainActivity.this);
+        startActivityForResult(intent, PLACE_PICKER_REQUEST);
     }
 
     @Override
@@ -113,24 +162,44 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return true;
-    }
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == RESULT_OK) {
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            String cityName = getCityNameFromPlace(place);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-                // User chose the "Search" item, show the app settings UI...
-                return true;
+            Toast.makeText(this, cityName, Toast.LENGTH_SHORT).show();
 
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
+            SharedPreferences.getInstance(this).putStringValue(SharedPreferences.CITY, cityName);
+            SharedPreferences.getInstance(this).putStringValue(SharedPreferences.NUM_DAYS, "7");
 
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+            finish();
+        } else if (requestCode == PLACE_PICKER_REQUEST && resultCode == AutocompleteActivity.RESULT_ERROR) {
+            Status status = Autocomplete.getStatusFromIntent(data);
+            // Handle the error
         }
     }
+
+    private String getCityNameFromPlace(Place place) {
+        String cityName = "";
+        List<Address> addresses = null;
+
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            addresses = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (addresses != null && addresses.size() > 0) {
+            Address address = addresses.get(0);
+            cityName = address.getLocality();
+        }
+
+        return cityName;
+    }
+
 }
