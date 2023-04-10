@@ -168,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             Place place = Autocomplete.getPlaceFromIntent(data);
             String cityName = getCityNameFromPlace(place);
 
-            Toast.makeText(this, cityName, Toast.LENGTH_SHORT).show();
-
             SharedPreferences.getInstance(this).putStringValue(SharedPreferences.CITY, cityName);
             SharedPreferences.getInstance(this).putStringValue(SharedPreferences.NUM_DAYS, "7");
 
@@ -197,6 +195,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         if (addresses != null && addresses.size() > 0) {
             Address address = addresses.get(0);
             cityName = address.getLocality();
+
+            SharedPreferences.getInstance(this).putStringValue(SharedPreferences.FULL_ADDRESS, address.getAddressLine(0).toString());
         }
 
         return cityName;

@@ -42,6 +42,7 @@ public class TodayFragment extends Fragment implements Injectable {
     @BindView(R.id.humidity_value) TextView humidity_value;
     @BindView(R.id.wind_value) TextView wind_value;
     @BindView(R.id.uv_value) TextView uv_value;
+    @BindView(R.id.full_address) TextView full_address;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -74,6 +75,8 @@ public class TodayFragment extends Fragment implements Injectable {
 
         String city = SharedPreferences.getInstance(getContext()).getCity();
         String numDays = SharedPreferences.getInstance(getContext()).getNumDays();
+        String fullAddress = SharedPreferences.getInstance(getContext()).getFullAddress();
+        boolean conversion = SharedPreferences.getInstance(getContext()).isCelsius();
 
         forecastViewModel = new ViewModelProvider(this, viewModelFactory).get(ForecastViewModel.class);
         forecastViewModel.fetchResults(city, numDays).observe(getViewLifecycleOwner(), result -> {
@@ -88,6 +91,7 @@ public class TodayFragment extends Fragment implements Injectable {
                 date.setText(String.format("%s, %s", Utility.format(dailyForecasts.get(0).getDate()), Utility.formatDate(dailyForecasts.get(0).getDate())));
                 humidity_value.setText(dailyForecasts.get(0).getHumidity() + "%");
                 wind_value.setText(Utility.getFormattedWind(getContext(), Float.parseFloat(String.valueOf(dailyForecasts.get(0).getWind()))));
+                full_address.setText(fullAddress);
 
                 SharedPreferences.getInstance(getContext()).putStringValue(SharedPreferences.DESC, dailyForecasts.get(0).getDescription());
                 if(timeOfDay >= 0 && timeOfDay < 12){

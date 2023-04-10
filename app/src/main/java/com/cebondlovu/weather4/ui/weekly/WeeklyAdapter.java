@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cebondlovu.weather4.R;
 import com.cebondlovu.weather4.model.SavedDailyForecast;
+import com.cebondlovu.weather4.util.SharedPreferences;
 import com.cebondlovu.weather4.util.Utility;
 
 import java.util.Calendar;
@@ -41,6 +42,7 @@ public class WeeklyAdapter extends RecyclerView.Adapter<WeeklyAdapter.WeeklyView
     @Override
     public void onBindViewHolder(@NonNull WeeklyViewHolder holder, int position) {
         Calendar c = Calendar.getInstance();
+
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
         // Determine the values of the wanted data
         SavedDailyForecast forecast = forecasts.get(position);

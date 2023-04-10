@@ -17,6 +17,8 @@ public class SharedPreferences {
     public static final String NUM_DAYS = "num_days";
     public static final String DESC = "desc";
     public static final String TEMP = "temp";
+    public static final String FULL_ADDRESS = "address";
+    public static final String IS_CELSIUS = "celsius";
 
 
 
@@ -74,4 +76,13 @@ public class SharedPreferences {
     public String getTemp() {
         return preferences.getString(TEMP, "");
     }
+
+    public String getFullAddress() {
+        return preferences.getString(FULL_ADDRESS, "");
+    }
+
+    public boolean isCelsius() {
+        return preferences.getBoolean(IS_CELSIUS, true);
+    }
+
 }
