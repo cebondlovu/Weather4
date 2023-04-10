@@ -6,19 +6,19 @@
 
     <fragment
         android:id="@+id/navigation_today"
-        android:name="com.delaroystudios.weatherapp.ui.today.TodayFragment"
+        android:name="com.cebondlovu.weather4.ui.today.TodayFragment"
         android:label=""
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_weekly"
-        android:name="com.delaroystudios.weatherapp.ui.weekly.WeeklyFragment"
+        android:name="com.cebondlovu.weather4.ui.weekly.WeeklyFragment"
         android:label=""
         tools:layout="@layout/fragment_weekly" />
 
     <fragment
         android:id="@+id/navigation_share"
-        android:name="com.delaroystudios.weatherapp.ui.today.TodayFragment"
+        android:name="com.cebondlovu.weather4.ui.today.TodayFragment"
         android:label=""
         tools:layout=""/>
 

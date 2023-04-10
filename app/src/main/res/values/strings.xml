@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Weather4</string>
+    <string name="app_name">WeatherApp</string>
     <string name="feels_like">Feels like</string>
     <string name="today">Today</string>
     <string name="humidity">Humidity</string>

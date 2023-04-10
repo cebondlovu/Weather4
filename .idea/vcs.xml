@@ -2,11 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/RedKapetChatPart" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Weather" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/Weather3" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/dabzoriginal" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/sunmi/Android_GUI" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/sunmi/ThirdPartyDevicePaymentApp" vcs="Git" />
   </component>
 </project>

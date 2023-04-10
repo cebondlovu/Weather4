@@ -7,7 +7,7 @@
         <variable name="numDays" type="String"/>
         <variable
             name="settingsFragment"
-            type="com.example.weather4.ui.settings.SettingsFragment"/>
+            type="com.cebondlovu.weather4.ui.settings.SettingsFragment"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
