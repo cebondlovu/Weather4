@@ -67,7 +67,6 @@ SettingsFragment extends DialogFragment implements Injectable {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i) {
                     case R.id.radioCelsius:
-                        Toast.makeText(getContext(), "true", Toast.LENGTH_SHORT).show();
                         SharedPreferences.getInstance(getContext()).putBooleanValue(SharedPreferences.IS_CELSIUS, true);
                         break;
                     case R.id.radioFahrenheit:
