@@ -34,12 +34,24 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/full_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Full address"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="150dp"
+                android:textColor="#EAEAEA"
+                android:layout_below="@+id/date"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp" />
+
+            <TextView
                 android:id="@+id/condition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Light Rain"
                 android:textColor="@color/white"
-                android:layout_below="@+id/date"
+                android:layout_below="@+id/full_address"
                 android:layout_marginStart="16dp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"

@@ -41,6 +41,7 @@ public class WeeklyFragment extends Fragment implements Injectable, WeeklyAdapte
     @BindView(R.id.condition) TextView condition;
     @BindView(R.id.weather_resource) ImageView weather_resource;
     @BindView(R.id.temp_condition) TextView temp_condition;
+    @BindView(R.id.full_address) TextView full_address;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -71,6 +72,7 @@ public class WeeklyFragment extends Fragment implements Injectable, WeeklyAdapte
 
         String city = SharedPreferences.getInstance(getContext()).getCity();
         String numDays = SharedPreferences.getInstance(getContext()).getNumDays();
+        String fullAddress = SharedPreferences.getInstance(getContext()).getFullAddress();
 
         weeklyViewModel = new ViewModelProvider(this, viewModelFactory).get(ForecastViewModel.class);
         weeklyViewModel.fetchResults(city, numDays).observe(getViewLifecycleOwner(), result -> {
@@ -83,6 +85,7 @@ public class WeeklyFragment extends Fragment implements Injectable, WeeklyAdapte
                 weather_resource.setImageResource(Utility.getArtResourceForWeatherCondition(dailyForecasts.get(0).getWeatherid()));
                 condition.setText(Utility.toTitleCase(dailyForecasts.get(0).getDescription()));
                 date.setText(String.format("%s, %s", Utility.format(dailyForecasts.get(0).getDate()), Utility.formatDate(dailyForecasts.get(0).getDate())));
+                full_address.setText(fullAddress);
 
                 if(timeOfDay >= 0 && timeOfDay < 12){
                     temp_condition.setText(Utility.formatTemperature(getContext(), dailyForecasts.get(0).getMorningTemp()));

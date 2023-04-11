@@ -76,7 +76,6 @@ public class TodayFragment extends Fragment implements Injectable {
         String city = SharedPreferences.getInstance(getContext()).getCity();
         String numDays = SharedPreferences.getInstance(getContext()).getNumDays();
         String fullAddress = SharedPreferences.getInstance(getContext()).getFullAddress();
-        boolean conversion = SharedPreferences.getInstance(getContext()).isCelsius();
 
         forecastViewModel = new ViewModelProvider(this, viewModelFactory).get(ForecastViewModel.class);
         forecastViewModel.fetchResults(city, numDays).observe(getViewLifecycleOwner(), result -> {
